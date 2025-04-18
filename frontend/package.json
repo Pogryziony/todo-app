@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "test": "echo 'No tests configured' && exit 0",
     "docker:dev": "docker-compose up frontend",
     "docker:build": "docker build -t todo-app-frontend:latest .",
     "docker:run": "docker run -p 8080:80 todo-app-frontend:latest"
