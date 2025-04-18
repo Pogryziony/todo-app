@@ -1,4 +1,4 @@
 theme: ''
 source:
-  branch: main
-  path: /frontend/dist 
+  branch: gh-pages
+  path: / 

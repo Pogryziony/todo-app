@@ -1,11 +1,14 @@
 name: Deploy to GitHub Pages
 
 on:
+  # Runs on pushes targeting the default branch
   push:
     branches: [ main ]
-  # Manual trigger
+  
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
@@ -17,39 +20,52 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Build job
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        
+      
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: '18'
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
-          
+      
       - name: Setup Pages
         uses: actions/configure-pages@v3
-        
+      
       - name: Install dependencies
         run: cd frontend && npm ci
-        
+      
       - name: Build
         run: cd frontend && npm run build
         env:
           VITE_API_URL: ${{ secrets.BACKEND_API_URL || 'https://api.example.com' }}
           VITE_GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID || '' }}
-          
+      
       - name: Add .nojekyll file
-        run: touch frontend/dist/.nojekyll
-        
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        run: |
+          touch frontend/dist/.nojekyll
+          echo "Adding _redirects file for SPA routing"
+          echo "/* /index.html 200" > frontend/dist/_redirects
+      
+      # Upload artifact for the deployment job
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: 'frontend/dist'
-          
+      
+      # For debugging purposes
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-build
+          path: frontend/dist
+
+  # Deployment job
   deploy:
     environment:
       name: github-pages
@@ -59,4 +75,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2 
+        uses: actions/deploy-pages@v3 

@@ -47,3 +47,17 @@ const app = createApp(App)
 app.use(router)
 app.use(pinia)
 app.mount('#app')
+
+// Handle redirect from 404.html page after app is mounted
+const handleRedirect = () => {
+  const redirect = sessionStorage.getItem('redirect')
+  if (redirect && redirect !== '' && redirect !== '/') {
+    console.log('Redirecting to:', redirect)
+    sessionStorage.removeItem('redirect')
+    // Use router.replace instead of push to avoid adding to history
+    router.replace('/' + redirect)
+  }
+}
+
+// Wait a moment before handling the redirect to ensure app is fully loaded
+setTimeout(handleRedirect, 100)
