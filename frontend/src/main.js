@@ -11,9 +11,12 @@ import TodoList from './views/TodoList.vue'
 import NotFound from './views/NotFound.vue'
 import AuthCallback from './views/AuthCallback.vue'
 
+// Get base URL from Vite
+const base = import.meta.env.BASE_URL
+
 // Create router
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(base),
   routes: [
     { path: '/', component: Home },
     { path: '/login', component: Login },
