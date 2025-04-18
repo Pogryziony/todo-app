@@ -14,6 +14,9 @@ import AuthCallback from './views/AuthCallback.vue'
 // Get base URL from Vite
 const base = import.meta.env.BASE_URL
 
+// Set this to true to use local storage instead of API calls when backend is not available
+window.USE_MOCK_BACKEND = true;
+
 // Create router
 const router = createRouter({
   history: createWebHistory(base),

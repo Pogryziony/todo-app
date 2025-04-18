@@ -8,15 +8,19 @@ export const useTodoStore = defineStore('todos', () => {
   const isLoading = ref(false);
   const error = ref(null);
 
+  // Check if we should use mock backend
+  const useMockBackend = () => {
+    return window.USE_MOCK_BACKEND || import.meta.env.DEV && !localStorage.getItem('token');
+  };
+
   // Load todos from API
   const loadTodos = async () => {
     isLoading.value = true;
     error.value = null;
     
     try {
-      // In dev mode, check if we have a token for API calls
-      if (import.meta.env.DEV && !localStorage.getItem('token')) {
-        // In development, load from localStorage if available
+      if (useMockBackend()) {
+        // In mock mode, load from localStorage if available
         const savedTodos = localStorage.getItem('todos');
         if (savedTodos) {
           todos.value = JSON.parse(savedTodos);
@@ -63,8 +67,8 @@ export const useTodoStore = defineStore('todos', () => {
     error.value = null;
     
     try {
-      if (import.meta.env.DEV && !localStorage.getItem('token')) {
-        // In dev mode without token, use localStorage
+      if (useMockBackend()) {
+        // In mock mode, use localStorage
         const newTodo = {
           ...todo,
           id: Date.now(),
@@ -95,8 +99,8 @@ export const useTodoStore = defineStore('todos', () => {
       const todo = todos.value.find(t => t.id === id);
       if (!todo) return;
       
-      if (import.meta.env.DEV && !localStorage.getItem('token')) {
-        // In dev mode without token, use localStorage
+      if (useMockBackend()) {
+        // In mock mode, use localStorage
         todo.completed = !todo.completed;
         saveTodos();
       } else {
@@ -118,8 +122,8 @@ export const useTodoStore = defineStore('todos', () => {
     error.value = null;
     
     try {
-      if (import.meta.env.DEV && !localStorage.getItem('token')) {
-        // In dev mode without token, use localStorage
+      if (useMockBackend()) {
+        // In mock mode, use localStorage
         todos.value = todos.value.filter(todo => todo.id !== id);
         saveTodos();
       } else {
@@ -141,8 +145,8 @@ export const useTodoStore = defineStore('todos', () => {
     error.value = null;
     
     try {
-      if (import.meta.env.DEV && !localStorage.getItem('token')) {
-        // In dev mode without token, use localStorage
+      if (useMockBackend()) {
+        // In mock mode, use localStorage
         const index = todos.value.findIndex(t => t.id === id);
         if (index !== -1) {
           todos.value[index] = { ...todos.value[index], ...updates };
