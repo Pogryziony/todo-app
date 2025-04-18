@@ -1,0 +1,43 @@
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
+import { createRouter, createWebHistory } from 'vue-router'
+import './assets/main.css'
+import App from './App.vue'
+
+// Import views
+import Home from './views/Home.vue'
+import Login from './views/Login.vue'
+import TodoList from './views/TodoList.vue'
+import NotFound from './views/NotFound.vue'
+import AuthCallback from './views/AuthCallback.vue'
+
+// Create router
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    { path: '/', component: Home },
+    { path: '/login', component: Login },
+    { path: '/todos', component: TodoList, meta: { requiresAuth: true } },
+    { path: '/auth/callback', component: AuthCallback },
+    { path: '/:pathMatch(.*)*', component: NotFound }
+  ]
+})
+
+// Route guard for protected routes
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = localStorage.getItem('token')
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next('/login')
+  } else {
+    next()
+  }
+})
+
+// Create Pinia store
+const pinia = createPinia()
+
+// Create app
+const app = createApp(App)
+app.use(router)
+app.use(pinia)
+app.mount('#app')

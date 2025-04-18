@@ -1,0 +1,27 @@
+{
+  "name": "todo-app-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "docker:dev": "docker-compose up frontend",
+    "docker:build": "docker build -t todo-app-frontend:latest .",
+    "docker:run": "docker run -p 8080:80 todo-app-frontend:latest"
+  },
+  "dependencies": {
+    "axios": "^1.5.1",
+    "pinia": "^2.1.6",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.3",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.3",
+    "vite": "^4.4.5"
+  }
+}

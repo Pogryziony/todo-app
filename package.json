@@ -1,0 +1,30 @@
+{
+  "name": "todo-app",
+  "version": "1.0.0",
+  "description": "Modern Todo application with Google Calendar integration",
+  "scripts": {
+    "frontend:dev": "cd frontend && npm run dev",
+    "frontend:build": "cd frontend && npm run build",
+    "backend:dev": "cd backend && npm run dev",
+    "start": "cd backend && npm start",
+    "dev": "concurrently \"npm run backend:dev\" \"npm run frontend:dev\"",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "docker:dev": "docker-compose up",
+    "docker:build": "docker-compose build",
+    "init": "node initialize.js",
+    "postinstall": "node -e \"console.log('\\n🚀 Todo App installed! Run \\'npm run init\\' to set up environment files.\\n')\""
+  },
+  "keywords": [
+    "vue",
+    "node",
+    "express",
+    "mongodb",
+    "todo",
+    "google-calendar"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.1"
+  }
+} 
