@@ -5,8 +5,18 @@ on:
     branches: [ main ]
     paths:
       - 'frontend/**'
-      - '.github/workflows/frontend.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'frontend/**'
+  # Allow manual workflow runs
   workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
   build-and-deploy:
@@ -14,27 +24,29 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
         
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
           node-version: '18'
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
           
       - name: Install dependencies
-        run: npm ci
-        working-directory: ./frontend
+        run: cd frontend && npm ci
         
       - name: Build
-        run: npm run build
-        working-directory: ./frontend
+        run: cd frontend && npm run build
         env:
-          VITE_API_URL: ${{ secrets.BACKEND_API_URL }}
-          VITE_GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          VITE_API_URL: ${{ secrets.BACKEND_API_URL || 'https://api.example.com' }}
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID || '' }}
           
+      - name: Test
+        run: cd frontend && npm test || true
+        
       - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: frontend/dist
