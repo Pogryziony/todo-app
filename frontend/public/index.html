@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Todo App</title>
+  <script>
+    // Clean up any leftover redirect data to prevent loops
+    if (sessionStorage.getItem('redirect')) {
+      // Check if we've already tried to redirect too many times
+      const redirectAttempts = sessionStorage.getItem('redirectAttempts') || 0;
+      if (parseInt(redirectAttempts) > 3) {
+        // Too many attempts, clear the redirect to break the loop
+        console.log('Too many redirect attempts, clearing redirect data');
+        sessionStorage.removeItem('redirect');
+        sessionStorage.removeItem('redirectAttempts');
+      } else {
+        // Increment the counter
+        sessionStorage.setItem('redirectAttempts', parseInt(redirectAttempts) + 1);
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="app"></div>
+  <!-- Built files will be auto injected by the build process -->
+</body>
+</html> 
